@@ -4,6 +4,7 @@ This guide is for deploying OpenStack with PackStack. It also then configures Op
 ## Setup Host Centos Stream 9 or Rocky Linux 9
 
 Ideally the VM or Host should have 8 vCPUs and 16GB Memory.
+Issue below to install required packages and perform preconfiguration tasks.
 
 ```
 ./setup_host.sh
