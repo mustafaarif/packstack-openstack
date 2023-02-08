@@ -51,7 +51,16 @@ packstack --answer-file answers.txt
 ```
 ## Setup Kerberos on host
 ```
-cp krb5.conf /etc/
+cat << EOF >> /etc/krb5.conf
+[realms]
+   SWSTACK.COM = {
+      kdc = kdc.swstack.com
+      admin_server = kdc.swstack.com
+     }
+[domain_realm]
+  .swstack.com = SWSTACK.COM
+EOF
+
 ## Test
 kinit clouduser1@SWSTACK.COM
 ```
