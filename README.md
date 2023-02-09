@@ -51,6 +51,8 @@ packstack --answer-file answers.txt
 ```
 ## Setup Kerberos on host
 ```
+sed -i '/\[realms\]/d' /etc/krb5.conf
+sed -i '/\[domain_realm\]/d' /etc/krb5.conf
 cat << EOF >> /etc/krb5.conf
 [realms]
    SWSTACK.COM = {
