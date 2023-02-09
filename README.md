@@ -47,7 +47,6 @@ grep -a 'CONFIG_MAGNUM_INSTALL\|CONFIG_DEFAULT_PASSWORD\|CONFIG_KEYSTONE_ADMIN_P
 ## Install OpenStack
 ```
 packstack --answer-file answers.txt
-
 ```
 ## Setup Kerberos on host
 ```
