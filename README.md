@@ -15,7 +15,7 @@ Issue below to install required packages and perform preconfiguration tasks.
 ```
 export HOST_NAME="cloud.swstack.com"
 dnf -y install socat
-wget -O -  https://get.acme.sh | sh -s email=certs@emarif.com
+wget -O -  https://get.acme.sh | sh -s email=certs@swstack.com
 # Make sure 443/80 ports are open
 ~/.acme.sh/acme.sh --issue  -d ${HOST_NAME}  --standalone
 cp /root/.acme.sh/${HOST_NAME}_ecc/cloud.swstack.com.key /etc/ssl/certs
