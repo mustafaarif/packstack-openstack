@@ -48,6 +48,17 @@ grep -a 'CONFIG_MAGNUM_INSTALL\|CONFIG_DEFAULT_PASSWORD\|CONFIG_KEYSTONE_ADMIN_P
 ```
 packstack --answer-file answers.txt
 ```
+## Configure authenticated email relay [TODO]
+```
+sed -i <following params> /etc/openstack-dashboard/local_settings
+# Configure these for your outgoing email host
+#EMAIL_HOST = 'smtp.my-company.com'
+#EMAIL_PORT = 25
+#EMAIL_HOST_USER = 'djangomail'
+#EMAIL_HOST_PASSWORD = 'top-secret!'
+```
+
+# Option 01: Integrate OpenStack with LDAP via a Domain
 ## Setup Kerberos on host
 ```
 sed -i '/\[realms\]/d' /etc/krb5.conf
@@ -65,8 +76,6 @@ EOF
 ## Test
 kinit clouduser1@SWSTACK.COM
 ```
-
-# Option 01: Integrate OpenStack with LDAP via a Domain
 ## Install Python Packages for Kerberos
 ```
 pip install keystoneauth1[kerberos]
@@ -164,15 +173,7 @@ sed -i 's/^OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=.*/OPENSTACK_KEYSTONE_MULTID
 #Set default domain with [TODO]
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'
 ```
-## Configure authenticated email relay [TODO]
-```
-sed -i <following params> /etc/openstack-dashboard/local_settings
-# Configure these for your outgoing email host
-#EMAIL_HOST = 'smtp.my-company.com'
-#EMAIL_PORT = 25
-#EMAIL_HOST_USER = 'djangomail'
-#EMAIL_HOST_PASSWORD = 'top-secret!'
-```
+
 ## Create OpenStack Domain, Projects
 ```
 openstack domain create mycloud
