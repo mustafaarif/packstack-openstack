@@ -65,12 +65,13 @@ EOF
 ## Test
 kinit clouduser1@SWSTACK.COM
 ```
+
+# Option 01: Integrate OpenStack with LDAP via a Domain
 ## Install Python Packages for Kerberos
 ```
 pip install keystoneauth1[kerberos]
 ```
-## Integrate OpenStack with LDAP via a Domain
-### Create a Domain file
+## Create a Domain file
 ```
 mkdir -p /etc/keystone/domains
 touch /etc/keystone/domains/keystone.mycloud.conf
@@ -93,7 +94,7 @@ user_name_attribute=uid
 systemctl restart httpd
 EOF
 ```
-### Make Changes in /etc/keystone/keystone.conf
+## Make Changes in /etc/keystone/keystone.conf
 ```
 [auth]
 methods = external,password,token,kerberos,oauth1,mapped,application_credential
@@ -103,7 +104,7 @@ federated_domain_name = mycloud
 domain_specific_drivers_enabled = true
 domain_config_dir = /etc/keystone/domains
 ```
-### Update httpd configurations to integrate kerberos authentication in KeyStone
+## Update httpd configurations to integrate kerberos authentication in KeyStone
 > Add or update following section in /etc/httpd/conf.d/10-keystone_wsgi.conf
 ```
   ## WSGI configuration
@@ -124,13 +125,13 @@ domain_config_dir = /etc/keystone/domains
   </Location>
 </VirtualHost>
 ```
-### Update httpd configurations to integrate kerberos authentication in Horizon [TODO]
+## Update httpd configurations to integrate kerberos authentication in Horizon [TODO]
 > Still no success, but here is the idea
 ```
 ??
 ```
 
-### Create Keytab for kerberos authentication. 
+## Create Keytab for kerberos authentication. 
 > This step will be done on kdc server
 ```
 root@kdc:~# kadmin.local
@@ -142,7 +143,7 @@ ktadd -k /etc/http.keytab host/cloud.swstack.com
 ```
 scp /etc/http.keytab root@cloud.swstack.com:/etc/gssproxy
 ```
-### Setup GSSAPI Proxy
+## Setup GSSAPI Proxy
 > Add/Update follwing in /etc/gssproxy/gssproxy.conf
 ```
 [gssproxy]
@@ -157,14 +158,13 @@ scp /etc/http.keytab root@cloud.swstack.com:/etc/gssproxy
 ```
 systemctl enable --now gssproxy.service
 ```
-
-### Enable Multi Domain Support in OpenStack Keystone
+## Enable Multi Domain Support in OpenStack Keystone
 ```
 sed -i 's/^OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=.*/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=y/' /etc/openstack-dashboard/local_settings
 #Set default domain with [TODO]
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'
 ```
-### Configure authenticated email relay [TODO]
+## Configure authenticated email relay [TODO]
 ```
 sed -i <following params> /etc/openstack-dashboard/local_settings
 # Configure these for your outgoing email host
@@ -210,3 +210,7 @@ kinit clouduser1@SWSTACK.COM
 openstack user list
 openstack endpoint list
 ```
+# Option 02: SSO Authentication (Federated Identity)
+
+
+
