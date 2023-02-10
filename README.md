@@ -28,7 +28,7 @@ cp /root/.acme.sh/${HOST_NAME}_ecc/ca.cer /etc/ssl/certs
 packstack --gen-answer-file=answers.txt
 
 # Modify answer file to suit our needs
-DEFAULT_PASS=`openssl rand -base64 32`
+DEFAULT_PASS=`cat /dev/urandom | tr -dc '[:alnum:]' | head -c 20`
 ADMIN_PASS="admin_osdev2023"
 DEMO_PASS="demo_osdev2023"
 sed -i 's/^CONFIG_DEFAULT_PASSWORD\=.*/CONFIG_DEFAULT_PASSWORD\='${DEFAULT_PASS}'/' answers.txt
