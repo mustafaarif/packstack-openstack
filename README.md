@@ -37,7 +37,7 @@ sed -i 's/^CONFIG_KEYSTONE_ADMIN_PW\=.*/CONFIG_KEYSTONE_ADMIN_PW\='${ADMIN_PASS}
 sed -i 's/^CONFIG_KEYSTONE_DEMO_PW\=.*/CONFIG_KEYSTONE_DEMO_PW\='${DEMO_PASS}'/' answers.txt
 sed -i 's/^CONFIG_HORIZON_SSL\=.*/CONFIG_HORIZON_SSL\=y/' answers.txt
 sed -i 's/^CONFIG_KEYSTONE_ADMIN_EMAIL\=.*/CONFIG_KEYSTONE_ADMIN_EMAIL\=cloudadmin@swstack.com/' answers.txt
-sed -i 's/^CONFIG_HORIZON_SSL_CERT\=.*/CONFIG_HORIZON_SSL_CERT\=\/etc\/ssl\/certs\/cloud\.swstack\.com\.key/' answers.txt
+sed -i 's/^CONFIG_HORIZON_SSL_CERT\=.*/CONFIG_HORIZON_SSL_CERT\=\/etc\/ssl\/certs\/cloud\.swstack\.com\.cer/' answers.txt
 sed -i 's/^CONFIG_HORIZON_SSL_KEY\=.*/CONFIG_HORIZON_SSL_KEY\=\/etc\/ssl\/certs\/cloud\.swstack\.com\.key/' answers.txt
 sed -i 's/^CONFIG_HORIZON_SSL_CACERT\=.*/CONFIG_HORIZON_SSL_CACERT\=\/etc\/ssl\/certs\/ca\.cer/' answers.txt
 # Verify
