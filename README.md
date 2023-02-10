@@ -103,9 +103,60 @@ federated_domain_name = mycloud
 domain_specific_drivers_enabled = true
 domain_config_dir = /etc/keystone/domains
 ```
+### Update httpd configurations to integrate kerberos authentication
+> Add or update following section in /etc/httpd/conf.d/10-keystone_wsgi.conf
+```
+  ## WSGI configuration
+  WSGIApplicationGroup %{GLOBAL}
+  WSGIDaemonProcess keystone display-name=keystone group=keystone processes=4 threads=1 user=keystone
+  WSGIProcessGroup keystone
+  WSGIScriptAlias /krb "/var/www/cgi-bin/keystone/keystone"
+  WSGIScriptAlias / "/var/www/cgi-bin/keystone/keystone"
+  WSGIPassAuthorization On
+  <Location "/krb/v3/auth/tokens">
+        LogLevel debug
+        AuthType GSSAPI
+        AuthName "GSSAPI Login"
+        GssapiAllowedMech krb5
+        GssapiLocalName On
+        Require valid-user
+        SetEnv REMOTE_DOMAIN mycloud
+  </Location>
+</VirtualHost>
+```
+### Create Keytab for kerberos authentication. 
+> This step will be done on kdc server
+```
+root@kdc:~# kadmin.local
+addprinc -randkey http/cloud.swstack.com
+ktadd -k /etc/http.keytab http/cloud.swstack.com
+addprinc -randkey host/cloud.swstack.com
+ktadd -k /etc/http.keytab host/cloud.swstack.com
+```
+```
+scp /etc/http.keytab root@cloud.swstack.com:/etc/gssproxy
+```
+### Setup GSSAPI Proxy
+> Add/Update follwing in /etc/gssproxy/gssproxy.conf
+```
+[gssproxy]
+
+[service/HTTP]
+  mechs = krb5
+  cred_store = keytab:/etc/gssproxy/http.keytab
+  cred_store = ccache:/var/lib/gssproxy/clients/krb5cc_%U
+  euid = 48
+  krb5_principal = HTTP
+```
+```
+systemctl enable --now gssproxy.service
+```
+
 ### Enable Multi Domain Support in OpenStack Keystone
 ```
 sed -i 's/^OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=.*/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=y/' /etc/openstack-dashboard/local_settings
+#Set default domain with [TODO]
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'
 ```
 ### Configure authenticated email relay [TODO]
 ```
