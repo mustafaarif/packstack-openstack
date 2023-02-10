@@ -74,8 +74,32 @@ pip install keystoneauth1[kerberos]
 ```
 mkdir -p /etc/keystone/domains
 touch /etc/keystone/domains/keystone.mycloud.conf
+
+cat << EOF >> /etc/keystone/domains/keystone.mycloud.conf
+[identity]
+driver = ldap
+
+[ldap]
+url=ldap://ldap.swstack.com
+suffix=dc=swstack,dc=com
+user_tree_dn=ou=kcloud,dc=swstack,dc=com
+user_objectclass=organizationalPerson
+user_id_attribute=uid
+user_name_attribute=uid
+#user_mail_attribute=mail
+#user_enabled_attribute=nsAccountLock
+#user_enabled_default=False
+#user_enabled_invert=true
 systemctl restart httpd
+EOF
 ```
-### Make Changes in /etc/keystone.conf
+### Make Changes in /etc/keystone/keystone.conf
 ```
+[auth]
+methods = external,password,token,kerberos,oauth1,mapped,application_credential
+[federation]
+federated_domain_name = mycloud
+[identity]
+domain_specific_drivers_enabled = true
+domain_config_dir = /etc/keystone/domains
 ```
