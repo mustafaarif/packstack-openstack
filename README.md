@@ -103,7 +103,7 @@ federated_domain_name = mycloud
 domain_specific_drivers_enabled = true
 domain_config_dir = /etc/keystone/domains
 ```
-### Update httpd configurations to integrate kerberos authentication
+### Update httpd configurations to integrate kerberos authentication in KeyStone
 > Add or update following section in /etc/httpd/conf.d/10-keystone_wsgi.conf
 ```
   ## WSGI configuration
@@ -124,6 +124,12 @@ domain_config_dir = /etc/keystone/domains
   </Location>
 </VirtualHost>
 ```
+### Update httpd configurations to integrate kerberos authentication in Horizon [TODO]
+> Still no success, but here is the idea
+```
+??
+```
+
 ### Create Keytab for kerberos authentication. 
 > This step will be done on kdc server
 ```
@@ -167,5 +173,40 @@ sed -i <following params> /etc/openstack-dashboard/local_settings
 #EMAIL_HOST_USER = 'djangomail'
 #EMAIL_HOST_PASSWORD = 'top-secret!'
 ```
+## Create OpenStack Domain, Projects
+```
+openstack domain create mycloud
+openstack project create --description 'Project 01' proj01 --domain mycloud
+openstack role add --user-domain mycloud --project proj01 --user clouduser1 admin
+```
 
-### 
+## Basic Tests
+### Verify if you can list users from LDAP
+```
+openstack user list --domain mycloud
+```
+### Create RC file for LDAP user (clouduser1)
+```
+[root@cloud ~]# cat mycloud_clouduser1 
+export OS_REGION_NAME=RegionOne
+export OS_USERNAME=clouduser1
+export OS_AUTH_URL=http://cloud.swstack.com:5000/krb/v3
+export PS1='[\u@\h \W(kCLOUD_admin)]\$ '
+export OS_PROJECT_NAME=proj01
+export OS_PROJECT_DOMAIN_NAME=mycloud
+export OS_IDENTITY_API_VERSION=3
+export OS_AUTH_TYPE=v3kerberos
+```
+### Source file
+```
+source mycloud_clouduser1 
+```
+### Obtain Kerberos Ticket
+```
+kinit clouduser1@SWSTACK.COM
+```
+### Issue OpenStack CLI cmds
+```
+openstack user list
+openstack endpoint list
+```
