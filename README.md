@@ -103,3 +103,18 @@ federated_domain_name = mycloud
 domain_specific_drivers_enabled = true
 domain_config_dir = /etc/keystone/domains
 ```
+### Enable Multi Domain Support in OpenStack Keystone
+```
+sed -i 's/^OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=.*/OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT \=y/' /etc/openstack-dashboard/local_settings
+```
+### Configure authenticated email relay [TODO]
+```
+sed -i <following params> /etc/openstack-dashboard/local_settings
+# Configure these for your outgoing email host
+#EMAIL_HOST = 'smtp.my-company.com'
+#EMAIL_PORT = 25
+#EMAIL_HOST_USER = 'djangomail'
+#EMAIL_HOST_PASSWORD = 'top-secret!'
+```
+
+### 
